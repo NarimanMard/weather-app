@@ -1,0 +1,64 @@
+version: '3.8'
+
+services:
+  # PostgreSQL database
+  postgres:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_DB: authdb
+      POSTGRES_USER: authuser
+      POSTGRES_PASSWORD: Nariman111
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U authuser -d authdb"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Backend авторизации
+  auth-backend:
+    build: ./auth-backend
+    ports:
+      - "8081:8081"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/authdb
+      SPRING_DATASOURCE_USERNAME: authuser
+      SPRING_DATASOURCE_PASSWORD: authpassword
+      SERVER_PORT: 8081
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  # Backend погоды
+  weather-backend:
+    build: ./weather-backend
+    ports:
+      - "8080:8080"
+    environment:
+      SERVER_PORT: 8080
+      OPENWEATHER_API_KEY: 55e4b67681409b6604750024466358fc
+      OPENWEATHER_API_URL: https://api.openweathermap.org/data/2.5
+    depends_on:
+      - auth-backend
+
+  # Фронтенд авторизации
+  auth-frontend:
+    build: ./auth-frontend
+    ports:
+      - "3001:80"
+    depends_on:
+      - auth-backend
+
+  # Фронтенд погоды
+  weather-frontend:
+    build: ./weather-frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      - weather-backend
+
+volumes:
+  postgres_data:
