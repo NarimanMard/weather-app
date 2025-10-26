@@ -29,6 +29,12 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
     
+    - name: Set up JDK 17
+      uses: actions/setup-java@v4
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+    
     - name: Test Backends
       run: |
         cd auth-backend && mvn test
@@ -55,13 +61,13 @@ jobs:
         DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
         OPENWEATHER_API_KEY: ${{ secrets.OPENWEATHER_API_KEY }}
       run: |
-        docker compose -f docker-compose.yml build
+        # Сборка каждого образа отдельно
+        docker build -t ${{ secrets.DOCKER_USERNAME }}/auth-backend:latest ./auth-backend
+        docker build -t ${{ secrets.DOCKER_USERNAME }}/weather-backend:latest ./weather-backend
+        docker build -t ${{ secrets.DOCKER_USERNAME }}/auth-frontend:latest ./auth-frontend
+        docker build -t ${{ secrets.DOCKER_USERNAME }}/weather-frontend:latest ./weather-frontend
         
-        docker tag weather-app_auth-backend ${{ secrets.DOCKER_USERNAME }}/auth-backend:latest
-        docker tag weather-app_weather-backend ${{ secrets.DOCKER_USERNAME }}/weather-backend:latest
-        docker tag weather-app_auth-frontend ${{ secrets.DOCKER_USERNAME }}/auth-frontend:latest
-        docker tag weather-app_weather-frontend ${{ secrets.DOCKER_USERNAME }}/weather-frontend:latest
-        
+        # Пуш
         docker push ${{ secrets.DOCKER_USERNAME }}/auth-backend:latest
         docker push ${{ secrets.DOCKER_USERNAME }}/weather-backend:latest
         docker push ${{ secrets.DOCKER_USERNAME }}/auth-frontend:latest
@@ -75,4 +81,3 @@ jobs:
     - name: Deploy to production
       run: |
         echo "Deployment would happen here"
-        # Здесь можно добавить деплой на сервер
