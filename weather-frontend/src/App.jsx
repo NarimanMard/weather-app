@@ -106,7 +106,7 @@ function App() {
           </div>
           <div className="weather-details">
             <div className="detail increase">
-              <span>💧 Влажность</span>
+              <span>💧Твоя Влажность😉</span>
               <span>{weatherData.humidity}%</span>
             </div>
             <div className="detail increase">
