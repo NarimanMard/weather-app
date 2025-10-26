@@ -54,7 +54,7 @@ jobs:
     
     - name: Build and push Docker images
       run: |
-        docker-compose -f docker compose.yml build
+        docker compose -f docker compose.yml build
         
         docker tag weather-app_auth-backend ${{ secrets.DOCKER_USERNAME }}/auth-backend:latest
         docker tag weather-app_weather-backend ${{ secrets.DOCKER_USERNAME }}/weather-backend:latest
