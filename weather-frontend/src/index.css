@@ -65,7 +65,7 @@ body {
 
 .weather-controls button {
   padding: 10px 20px;
-  background: #0065b8;
+  background: #0d88c5;
   color: white;
   border: none;
   border-radius: 8px;
@@ -127,5 +127,6 @@ body {
 }
 
 .increase :hover{
-  transform: scale(1.5)
+  transform: scale(0.5)
+  
 }

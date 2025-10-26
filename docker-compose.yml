@@ -12,7 +12,7 @@ services:
     restart: unless-stopped
 
   auth-backend:
-    build: ./auth-backend:latest
+    build: ./auth-backend
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/authdb
       SPRING_DATASOURCE_USERNAME: authuser
@@ -25,7 +25,7 @@ services:
       - postgres
 
   weather-backend:
-    build: ./weather-backend:latest
+    build: ./weather-backend
     environment:
       SERVER_PORT: 8080
       OPENWEATHER_API_KEY: ${OPENWEATHER_API_KEY}
@@ -36,7 +36,7 @@ services:
       - auth-backend
 
   auth-frontend:
-    build: ./auth-frontend:latest
+    build: ./auth-frontend
     ports:
       - "3001:80"
     restart: unless-stopped
@@ -44,7 +44,7 @@ services:
       - auth-backend
 
   weather-frontend:
-    build: ./weather-frontend:latest
+    build: ./weather-frontend
     ports:
       - "3000:80"
     restart: unless-stopped
