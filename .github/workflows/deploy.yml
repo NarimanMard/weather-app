@@ -1,0 +1,62 @@
+name: Build and Deploy Weather App
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Test Backends
+      run: |
+        cd auth-backend && mvn test
+        cd ../weather-backend && mvn test
+
+  build-and-push:
+    needs: test
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+    
+    - name: Login to Docker Hub
+      uses: docker/login-action@v3
+      with:
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
+    
+    - name: Build and push Docker images
+      run: |
+        docker-compose -f docker-compose.yml build
+        
+        docker tag weather-app_auth-backend ${{ secrets.DOCKER_USERNAME }}/auth-backend:latest
+        docker tag weather-app_weather-backend ${{ secrets.DOCKER_USERNAME }}/weather-backend:latest
+        docker tag weather-app_auth-frontend ${{ secrets.DOCKER_USERNAME }}/auth-frontend:latest
+        docker tag weather-app_weather-frontend ${{ secrets.DOCKER_USERNAME }}/weather-frontend:latest
+        
+        docker push ${{ secrets.DOCKER_USERNAME }}/auth-backend:latest
+        docker push ${{ secrets.DOCKER_USERNAME }}/weather-backend:latest
+        docker push ${{ secrets.DOCKER_USERNAME }}/auth-frontend:latest
+        docker push ${{ secrets.DOCKER_USERNAME }}/weather-frontend:latest
+
+  deploy:
+    needs: build-and-push
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Deploy to production
+      run: |
+        echo "Deployment would happen here"
+        # Здесь можно добавить деплой на сервер
