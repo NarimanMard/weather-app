@@ -125,3 +125,7 @@ body {
   color: #636e72;
   font-size: 18px;
 }
+
+.increase :hover{
+  transform: scale(1.5)
+}

@@ -94,26 +94,26 @@ function App() {
       {error && <div className="error">{error}</div>}
 
       {weatherData && (
-        <div className="weather-card">
+        <div className="weather-card ">
           <h2>{weatherData.city}, {weatherData.country}</h2>
           <div className="weather-main">
-            <div className="temperature">
+            <div className="temperature increase">
               {weatherData.temperature}°C
             </div>
-            <div className="description">
+            <div className="description ">
               {weatherData.description}
             </div>
           </div>
           <div className="weather-details">
-            <div className="detail">
+            <div className="detail increase">
               <span>💧 Влажность</span>
               <span>{weatherData.humidity}%</span>
             </div>
-            <div className="detail">
+            <div className="detail increase">
               <span>💨 Ветер</span>
               <span>{weatherData.windSpeed} м/с</span>
             </div>
-            <div className="detail">
+            <div className="detail increase">
               <span>🎯 Давление</span>
               <span>{weatherData.pressure} hPa</span>
             </div>
