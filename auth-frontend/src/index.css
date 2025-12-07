@@ -6,7 +6,7 @@
 
 body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: white;
   min-height: 100vh;
   display: flex;
   align-items: center;
@@ -50,7 +50,7 @@ input:focus {
 
 button {
   padding: 12px;
-  background: #667eea;
+  background: #000000;
   color: white;
   border: none;
   border-radius: 8px;
@@ -60,18 +60,18 @@ button {
 }
 
 button:hover {
-  background: #5a6fd8;
+  background: #133bff;
 }
 
 .switch-btn {
   background: transparent;
-  color: #667eea;
-  border: 2px solid #667eea;
+  color: #1b45ff;
+  border: 2px solid #1b45ff;
   margin-top: 10px;
 }
 
 .switch-btn:hover {
-  background: #667eea;
+  background: #243479;
   color: white;
 }
 
@@ -85,18 +85,18 @@ button:hover {
 
 .message.success {
   background: #d4edda;
-  color: #155724;
+  color: #03d634;
   border: 1px solid #c3e6cb;
 }
 
 .message.error {
   background: #f8d7da;
-  color: #721c24;
+  color: #ff0019;
   border: 1px solid #f5c6cb;
 }
 
 .loading {
   text-align: center;
   padding: 20px;
-  color: #666;
+  color: #e6c5c5;
 }

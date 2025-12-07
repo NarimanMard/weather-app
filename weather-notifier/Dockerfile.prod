@@ -1,0 +1,33 @@
+FROM python:3.11-alpine
+
+WORKDIR /app
+
+# Устанавливаем системные зависимости
+RUN apk add --no-cache tzdata curl
+
+# Копируем зависимости
+COPY requirements.txt .
+
+# Устанавливаем Python зависимости
+RUN pip install --no-cache-dir --upgrade pip \
+    && pip install --no-cache-dir -r requirements.txt
+
+# Копируем скрипт
+COPY sendler.py .
+
+# Создаем пользователя для безопасности
+RUN adduser -D -u 1001 pythonuser \
+    && chown -R pythonuser:pythonuser /app
+
+USER pythonuser
+
+# Команда запуска (более надежная версия)
+CMD ["sh", "-c", "trap 'echo Stopping...; exit 0' TERM; \
+    while true; do \
+        echo \"[$(date '+%Y-%m-%d %H:%M:%S')] Starting weather check\"; \
+        python sendler.py; \
+        EXIT_CODE=\$?; \
+        echo \"[$(date '+%Y-%m-%d %H:%M:%S')] Check completed with code \$EXIT_CODE\"; \
+        echo \"[$(date '+%Y-%m-%d %H:%M:%S')] Sleeping for \${CHECK_INTERVAL:-21600} seconds\"; \
+        sleep \${CHECK_INTERVAL:-21600}; \
+    done"]

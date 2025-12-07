@@ -51,5 +51,30 @@ services:
     depends_on:
       - weather-backend
 
+  # Система оповещения о погоде
+  weather-notifier:
+    build: ./weather-notifier
+    env_file:
+      - .env  # используем общий .env файл
+    environment:
+      # Можно переопределить переменные при необходимости
+      - TZ=Europe/Moscow
+    restart: unless-stopped
+    # Не зависит от других сервисов, работает автономно
+    # Если нужен доступ к weather-backend, раскомментируйте:
+    # depends_on:
+    #   - weather-backend
+    healthcheck:
+      test: ["CMD", "python", "-c", "import requests; print('Health check passed')"]
+      interval: 1m
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
 volumes:
   postgres_data:

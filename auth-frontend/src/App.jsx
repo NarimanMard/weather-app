@@ -60,7 +60,7 @@ function App() {
       <form onSubmit={handleAuth} className="auth-form">
         <input
           type="text"
-          placeholder="Имя пользователя"
+          placeholder="почта"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
           required

@@ -65,7 +65,7 @@ function App() {
   return (
     <div className="container">
       <div className="header">
-        <h1>🌤️ Погода</h1>
+        <h1>☁️Погода</h1>
         <div className="user-info">
           <span>Привет, {user}!</span>
           <button onClick={logout} className="logout-btn">Выйти</button>
@@ -106,15 +106,15 @@ function App() {
           </div>
           <div className="weather-details">
             <div className="detail increase">
-              <span>💧Твоя Влажность😉</span>
+              <span>Твоя Влажность😉</span>
               <span>{weatherData.humidity}%</span>
             </div>
             <div className="detail increase">
-              <span>💨 Ветер</span>
+              <span> Ветер</span>
               <span>{weatherData.windSpeed} м/с</span>
             </div>
             <div className="detail increase">
-              <span>🎯 Давление</span>
+              <span> Давление</span>
               <span>{weatherData.pressure} hPa</span>
             </div>
           </div>

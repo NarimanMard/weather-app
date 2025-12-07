@@ -43,5 +43,29 @@ services:
     depends_on:
       - weather-backend
 
+  # НОВЫЙ СЕРВИС: weather-notifier
+  weather-notifier:
+    image: $DOCKER_USERNAME/weather-notifier:latest
+    env_file:
+      - .env.prod  # или используйте общий .env
+    environment:
+      # Можно переопределить переменные здесь
+      TZ: ${TZ:-Europe/Moscow}
+      CHECK_INTERVAL: ${CHECK_INTERVAL:-21600}  # 6 часов в prod
+    restart: unless-stopped
+    # depends_on не нужен, так как работает автономно
+    healthcheck:
+      test: ["CMD", "python", "-c", "import os; exit(0 if os.getenv('OPENWEATHER_API_KEY') else 1)"]
+      interval: 5m
+      timeout: 30s
+      retries: 3
+      start_period: 2m
+    # Логирование для production
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "10"
+
 volumes:
   postgres_data:
