@@ -27,3 +27,7 @@ Thumbs.db
 # Logs
 *.log
 logs/
+
+sendler/
+
+логи_погоды.txt
