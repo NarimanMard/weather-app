@@ -38,7 +38,7 @@ services:
   auth-frontend:
     build: ./auth-frontend
     ports:
-      - "3001:80"
+      - "4001:80"
     restart: unless-stopped
     depends_on:
       - auth-backend
@@ -46,7 +46,7 @@ services:
   weather-frontend:
     build: ./weather-frontend
     ports:
-      - "3000:80"
+      - "4000:80"
     restart: unless-stopped
     depends_on:
       - weather-backend

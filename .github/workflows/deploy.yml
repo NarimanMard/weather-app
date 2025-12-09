@@ -74,12 +74,38 @@ jobs:
         docker push ${{ secrets.DOCKER_USERNAME }}/weather-frontend:latest
 
   deploy:
-    needs: build-and-push
-    runs-on: ubuntu-latest
+  runs-on: ubuntu-latest
+  needs: build
+  steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
     
-    steps:
-    - name: Deploy to production
+    - name: Run deployment tests
+      env:
+        DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+        OPENWEATHER_API_KEY: ${{ secrets.OPENWEATHER_API_KEY }}
       run: |
-        echo "Deployment would happen here"
-
-
+        docker-compose up -d
+        sleep 10
+        
+        for service in postgres auth-backend weather-backend auth-frontend weather-frontend; do
+          if [ -z "$(docker ps -q -f name=weather-app_${service}_1)" ]; then
+            echo "❌ Error: ${service} container is not running"
+            docker-compose logs ${service}
+            docker-compose down --volumes
+            exit 1
+          fi
+        done
+          echo "❌ Error: Weather frontend HTTP endpoint not accessible"
+          docker-compose logs weather-frontend
+          docker-compose down --volumes
+          exit 1
+        }
+        curl -f http://localhost:3001 || {
+          echo "❌ Error: Auth frontend HTTP endpoint not accessible"
+          docker-compose logs auth-frontend
+          docker-compose down --volumes
+          exit 1
+        }
+        echo "✅ All containers are running and accessible"
+        docker-compose down --volumes
